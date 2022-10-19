@@ -13,7 +13,7 @@ For this assignment, we'll be working with a book domain.
 
 We have three models: `Book`, `Reader`, and `Publisher`
 
-For our purposes, a `Publisher` has many `Books`s, a `Reader` has many `Book`s,
+For our purposes, a `Publisher` has many `Book`s, a `Reader` has many `Book`s,
 and a `Book` belongs to a `Reader` and "belongs to" a `Publisher`.
 
 `Publisher` - `Reader` is a many to many relationship.
@@ -51,13 +51,14 @@ your code to adhere to best practices.
 ## What You Already Have
 
 Migration files for the initial `Publisher`, and `Reader`
-models, and seed data for some `Publisher`s, `Readers`, and `Book`s. **You will have to edit the migration files to create tables with these structures:**
+models, and seed data for some `Publisher`s, `Reader`s, and `Book`s. **You will have to edit the migration files to create tables with these structures:**
 ### publisher Table
 
 | Column        | Type    |
 | ------------- | ------- |
 | name          | String  |
 | founding_year | Integer |
+| money         | Integer |
 
 ### readers Table
 
@@ -65,6 +66,7 @@ models, and seed data for some `Publisher`s, `Readers`, and `Book`s. **You will 
 | ------------- | ------- |
 | name          | String  |
 | superpowers   | String  |
+| money         | Integer |
 
 ## Deliverables
 
@@ -83,14 +85,15 @@ classes when you're approaching the deliverables below.
 Before working on the rest of the deliverables, you will need to create a
 migration for the `books` table.
 
-- A `Book` belongs to a `readers`, and a `Book` belongs to a `Publisher`.
+- A `Book` belongs to a `Reader`, and a `Book` belongs to a `Publisher`.
   In your migration, create any columns your `books` table will need to
   establish these relationships using the right foreign keys.
 - The `book` table should also have:
   - An `title` column that stores a string.
-  - A `author` column that stores an string.
+  - A `author` column that stores a string.
+  - A `price` column that stores an integer
 
-After creating the `books` table using a migration, add foreign keys to `seeds.rb`.
+After creating the `books` table using a migration, add foreign keys to `seeds.rb` in the proper table.
 
 **Once you've set up your `books` table**, work on building out the following
 deliverables.
@@ -113,7 +116,7 @@ deliverables.
 #### Reader
 
 - `Reader#books`
-  - returns a collection of all the books that the readers owns
+  - returns a collection of all the books that the reader owns
 - `Reader#publishers`
   - returns a collection of all the publishers of the reader's books
 
@@ -128,12 +131,12 @@ publishers for the first reader in the database based on your seed data; and
 
 - `Book#why_read?`
   - should return a string formatted as follows:
-    `Even a superhero with the ability of {insert reader's superpower} made time to read {insert book's title} pusblished by {insert publisher's name}!`
+    `Even a superhero with the ability of {insert reader's superpower} made time to read {insert book's title} published by {insert publisher's name}!`
 
 #### Publisher
 
-- `Publisher#publish_new_book(title, author)`
-  - takes a `title` and `author`, and creates a new `Book` instance associated with this
+- `Publisher#publish_new_book(title, author, price)`
+  - takes a `title`, `author`, and `price`, and creates a new `Book` instance associated with this
     publisher
   - after creating this method, use it to publish at least two new books. Note that these books will not yet have readers.
 - `Publisher.two_newest_publishers`
@@ -144,7 +147,7 @@ publishers for the first reader in the database based on your seed data; and
 #### Reader
 
 - `Reader#bought?(title, author, publisher)`
-  - accepts a `title` (string), `author` (string), and `publisher` (instance). If the reader already owns the book, returns the string `{insert reader's name} already owns {insert title}`. If the reader does not own the book, **and** the book is not owned by anyone else, then make the owner of the book this reader. If the reader does not own the book, **and** the book is owned by someone else, create a new book in the database with the appropriate title, author, and publisher
+  - accepts a `title` (string), `author` (string), and `publisher` (instance). If the reader already owns the book, returns the string `{insert reader's name} already owns {insert title}`. If the reader does not own the book, **and** the book is not owned by anyone else, then make the owner of the book this reader. If the reader does not own the book, **and** the book is owned by someone else, create a new book in the database with the appropriate title, author, and publisher. Whenever a book it bought, the price of the book should be subtracted from the Reader's `money` and added to the `money` of the publisher of that book. 
 - `Reader#lend(reader, book)`
   - accepts a `Reader` instance and a `Book` instance, changes the book's reader
     to be the given reader; your code should only make the change if the book
@@ -177,4 +180,4 @@ Create a new migraion and add a new column to the publishers table for a foreign
   - returns a collection of all the books published by the publisher that sponsors this villain :)
 
 - `Villain#hidden_weapon`
-  - A little back story: big publishing companies have started to sponsor supervillains for some extra cash! These companies have agreed to help the supervillains by hiding secret weapons in their books! When this method is called, the secret weapons in the books published by the sponsor of this particular villain will be triggered and the readers of said books with be killed instantly (remove the readers' data from that database).
+  - A little back story: big publishing companies have started to sponsor supervillains for some extra cash! These companies have agreed to help the supervillains by hiding secret weapons in their books! When this method is called, the secret weapons in the books published by the sponsor of this particular villain will be triggered and the readers of said books with be killed instantly (remove the readers' data from the database).
